@@ -1,51 +1,78 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: egeaydin <egeaydin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/27 17:51:22 by egeaydin          #+#    #+#             */
+/*   Updated: 2025/06/27 20:55:16 by egeaydin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 
-size_t	ft_putchar_fd(char c, int fd)
+size_t	ft_putchar(char c)
 {
-	write(fd, &c, 1);
-	return(1);
+	write(1, &c, 1);
+	return (1);
 }
-void	ft_putnbr_base_fd(int n, int fd, int base, char flag)
+size_t	null_check(long n, char flag)
 {
-	int	num;
-	char *digitsx;
-	char *digitsX;
+	size_t	size;
 
-	digitsx = ft_strdup("0123456789abcdef");
-	digitsX = ft_strdup("0123456789ABCDEF");
-	if (n == -2147483648)
-	{
-		ft_putchar_fd('-', fd);
-		ft_putstr_fd("2147483648", fd);
-		return ;
-	}
+	size = 0;
+	if (flag == 0)
+		return (0);
+	if (flag == 'p' && n == 0)
+		size += ft_putstr("(nil)");
+	else if (flag == 'p' && n != 0)
+		size += ft_putstr("0x");
+	return (size);
+}
+
+size_t	ft_putnbr_base(long n, int base, char flag, int first)
+{
+	size_t	size;
+
+	size = 0;
+	if (first)
+		size = null_check(n, flag);
+	first = 0;
+	if (size > 2)
+		return (size);
 	if (n < 0)
 	{
-		ft_putchar_fd('-', fd);
-		num = n * (-1);
+		size += ft_putchar('-');
+		n = n * (-1);
 	}
-	else
-		num = n;
-	if (num >= base)
-		ft_putnbr_base_fd(num / base, fd,base,flag);
+	if (n >= base)
+		size += ft_putnbr_base(n / base, base, flag,0);
 	if (flag == 'X')
-		ft_putchar_fd(digitsX[(num % base)],fd);
+		size += ft_putchar(DIGITS_UPPER[(n % base)]);
 	else
-		ft_putchar_fd(digitsx[(num % base)],fd);
+		size += ft_putchar(DIGITS_LOWER[(n % base)]);
+	return (size);
 }
-size_t	ft_putstr_fd(char *s, int fd)
+
+size_t	ft_putstr(char *s)
 {
 	size_t	i;
 
 	i = 0;
+	if (!s)
+	{
+		i += ft_putstr("(null)");
+		return (i);
+	}
 	while (s[i])
 	{
-		write(fd, &s[i], 1);
+		write(1, &s[i], 1);
 		i++;
 	}
 	return (i);
 }
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;

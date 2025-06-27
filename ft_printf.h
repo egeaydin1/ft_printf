@@ -3,24 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hientranpc <hientranpc@student.42.fr>      +#+  +:+       +#+        */
+/*   By: egeaydin <egeaydin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/22 02:27:47 by hientranpc        #+#    #+#             */
-/*   Updated: 2025/06/26 20:06:40 by hientranpc       ###   ########.fr       */
+/*   Created: 2025/06/27 17:52:21 by egeaydin          #+#    #+#             */
+/*   Updated: 2025/06/27 20:53:56 by egeaydin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF
-#define FT_PRINTF
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <stdio.h>
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
+# include <stdarg.h>
+# include <stdlib.h>
+# include <unistd.h>
+#define DIGITS_LOWER "0123456789abcdef"
+#define DIGITS_UPPER "0123456789ABCDEF"
 
-size_t	ft_putchar_fd(char c, int fd);
-size_t	ft_putstr_fd(char *s, int fd);
-void	ft_putnbr_base_fd(int n, int fd, int base, char flag);
+int		ft_printf(const char *input, ...);
 size_t	ft_strlen(const char *s);
+size_t	ft_putchar(char c);
+size_t	ft_putstr(char *s);
+size_t	null_check(long n, char flag);
+size_t	ft_putnbr_base(long n, int base, char flag, int first);
 char	*ft_strdup(const char *s);
-int ft_printf(const char *input, ...);
+
 #endif
