@@ -6,7 +6,7 @@
 /*   By: egeaydin <egeaydin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 17:51:22 by egeaydin          #+#    #+#             */
-/*   Updated: 2025/06/27 20:55:16 by egeaydin         ###   ########.fr       */
+/*   Updated: 2025/06/28 21:17:30 by egeaydin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ size_t	ft_putchar(char c)
 	write(1, &c, 1);
 	return (1);
 }
-size_t	null_check(long n, char flag)
+
+static size_t	null_check(long long n, char flag)
 {
 	size_t	size;
 
@@ -31,27 +32,29 @@ size_t	null_check(long n, char flag)
 	return (size);
 }
 
-size_t	ft_putnbr_base(long n, int base, char flag, int first)
+size_t	ft_putnbr_base(long long n, size_t base, char flag, int first)
 {
-	size_t	size;
+	size_t				size;
+	unsigned long long	num;
 
 	size = 0;
-	if (first)
+	if (first--)
 		size = null_check(n, flag);
-	first = 0;
 	if (size > 2)
 		return (size);
-	if (n < 0)
+	if (flag != 'p' && n < 0)
 	{
 		size += ft_putchar('-');
-		n = n * (-1);
+		num = -n;
 	}
-	if (n >= base)
-		size += ft_putnbr_base(n / base, base, flag,0);
-	if (flag == 'X')
-		size += ft_putchar(DIGITS_UPPER[(n % base)]);
 	else
-		size += ft_putchar(DIGITS_LOWER[(n % base)]);
+		num = (unsigned long long)n;
+	if (num >= base)
+		size += ft_putnbr_base(num / base, base, flag, 0);
+	if (flag == 'X')
+		size += ft_putchar(DIGITS_UPPER[(num % base)]);
+	else
+		size += ft_putchar(DIGITS_LOWER[(num % base)]);
 	return (size);
 }
 
@@ -61,44 +64,11 @@ size_t	ft_putstr(char *s)
 
 	i = 0;
 	if (!s)
-	{
-		i += ft_putstr("(null)");
-		return (i);
-	}
+		return (ft_putstr("(null)"));
 	while (s[i])
 	{
 		write(1, &s[i], 1);
 		i++;
 	}
 	return (i);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-char	*ft_strdup(const char *s)
-{
-	char	*strptr;
-	int		i;
-
-	i = 0;
-	if (!s)
-		return (NULL);
-	strptr = malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (!strptr)
-		return (NULL);
-	while (s[i])
-	{
-		strptr[i] = s[i];
-		i++;
-	}
-	strptr[i] = '\0';
-	return (strptr);
 }
